@@ -1,4 +1,4 @@
-import SUBMIT from './index';
+import { SUBMIT } from './index';
 
 const loginAction = (email) => ({
   type: SUBMIT,

@@ -1,7 +1,25 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { fetchMovies } from '../actions/walletActions';
 
-export default class FormAddExpense extends Component {
+class FormAddExpense extends Component {
+  constructor() {
+    super();
+    this.currenciesName = this.currenciesName.bind(this);
+  }
+
+  componentDidMount() {
+    const { fetchMoviesToState } = this.props;
+    fetchMoviesToState();
+  }
+
+  currenciesName() {
+    const { currencies } = this.props;
+    return currencies.map(({ code }) => (
+      <option key={ code } value={ code }>{ code }</option>));
+  }
+
   render() {
     return (
       <form>
@@ -16,7 +34,7 @@ export default class FormAddExpense extends Component {
         <label htmlFor="currencies">
           Moeda
           <select name="currencies" id="currencies">
-            <option value="BRL">BRL</option>
+            { this.currenciesName() }
           </select>
         </label>
         <label htmlFor="payment methods">
@@ -43,3 +61,18 @@ export default class FormAddExpense extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  currencies: state.wallet.currencies,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchMoviesToState: () => dispatch(fetchMovies()),
+});
+
+FormAddExpense.propTypes = {
+  fetchMoviesToState: PropTypes.func.isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormAddExpense);

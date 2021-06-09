@@ -1,4 +1,4 @@
-import SUBMIT from '../actions/index';
+import { SUBMIT } from '../actions/index';
 
 const INITIAL_STATE = {
   email: '',

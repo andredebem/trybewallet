@@ -1,3 +1,3 @@
-const SUBMIT = 'SUBMIT';
-
-export default SUBMIT;
+export const SUBMIT = 'SUBMIT';
+export const SAVE = 'SAVE';
+export const ADD = 'ADD';
