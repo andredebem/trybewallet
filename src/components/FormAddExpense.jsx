@@ -1,12 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchMovies } from '../actions/walletActions';
+import { fetchMovies, addExpense } from '../actions/walletActions';
+import PaymentMethods from './PaymentMethods';
+import TagSelect from './TagSelect';
 
 class FormAddExpense extends Component {
   constructor() {
     super();
+
+    this.state = {
+      value: 0,
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+    };
+
     this.currenciesName = this.currenciesName.bind(this);
+    this.mountExpense = this.mountExpense.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -14,10 +27,44 @@ class FormAddExpense extends Component {
     fetchMoviesToState();
   }
 
+  deleteUDST(currenciesWithUSDT) {
+    const currenciesWithoutUSDT = [...currenciesWithUSDT];
+    currenciesWithoutUSDT.splice(1, 1);
+    return currenciesWithoutUSDT;
+  }
+
   currenciesName() {
     const { currencies } = this.props;
-    return currencies.map(({ code }) => (
+    const currenciesArray = Object.values(JSON.parse(currencies));
+    const currenciesWithoutUSDT = this.deleteUDST(currenciesArray);
+    return currenciesWithoutUSDT.map(({ code }) => (
       <option key={ code } value={ code }>{ code }</option>));
+  }
+
+  async mountExpense() {
+    const { expenses } = this.props;
+    const nextId = () => (expenses.length);
+    const { fetchMoviesToState } = this.props;
+    await fetchMoviesToState();
+    const { value, description, currency, method, tag } = this.state;
+    const { currencies } = this.props;
+    const newExpense = {
+      id: nextId(),
+      value,
+      description,
+      currency,
+      method,
+      tag,
+      exchangeRates: JSON.parse(currencies),
+    };
+    const { addExpenseToState } = this.props;
+    addExpenseToState(newExpense);
+  }
+
+  handleChange({ target }) {
+    this.setState({
+      [target.id]: target.value,
+    });
   }
 
   render() {
@@ -25,54 +72,50 @@ class FormAddExpense extends Component {
       <form>
         <label htmlFor="value">
           Valor
-          <input type="number" min="0.01" name="value" id="value" placeholder="10" />
+          <input
+            type="number"
+            id="value"
+            onChange={ (e) => this.handleChange(e) }
+          />
         </label>
         <label htmlFor="description">
           Descrição
-          <input type="text" name="description" id="description" placeholder="2 Kiwis" />
+          <input type="text" id="description" onChange={ (e) => this.handleChange(e) } />
         </label>
-        <label htmlFor="currencies">
+        <label htmlFor="currency">
           Moeda
-          <select name="currencies" id="currencies">
+          <select id="currency" onChange={ (e) => this.handleChange(e) }>
             { this.currenciesName() }
           </select>
         </label>
-        <label htmlFor="payment methods">
-          Método de pagamento
-          <select name="payment methods" id="payment methods">
-            <option value="money">Dinheiro</option>
-            <option value="credit card">Cartão de crédito</option>
-            <option value="debit card">Cartão de débito</option>
-            <option value="other">Outro</option>
-          </select>
-        </label>
-        <label htmlFor="tag">
-          Tag
-          <select name="tag" id="tag">
-            <option value="food">Alimentação</option>
-            <option value="leisure">Lazer</option>
-            <option value="work">Trabalho</option>
-            <option value="transport">Transporte</option>
-            <option value="health">Saúde</option>
-            <option value="others">Outros</option>
-          </select>
-        </label>
+        <PaymentMethods handleChange={ this.handleChange } />
+        <TagSelect handleChange={ this.handleChange } />
+        <button
+          type="button"
+          onClick={ () => this.mountExpense() }
+        >
+          Adicionar despesa
+        </button>
       </form>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  currencies: state.wallet.currencies,
+  currencies: JSON.stringify(state.wallet.currencies),
+  expenses: state.wallet.expenses,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchMoviesToState: () => dispatch(fetchMovies()),
+  addExpenseToState: (expense) => dispatch(addExpense(expense)),
 });
 
 FormAddExpense.propTypes = {
   fetchMoviesToState: PropTypes.func.isRequired,
-  currencies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addExpenseToState: PropTypes.func.isRequired,
+  currencies: PropTypes.string.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormAddExpense);
