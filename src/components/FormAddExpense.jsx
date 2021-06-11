@@ -74,6 +74,7 @@ class FormAddExpense extends Component {
           Valor
           <input
             type="number"
+            min="0"
             id="value"
             onChange={ (e) => this.handleChange(e) }
           />
