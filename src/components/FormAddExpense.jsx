@@ -37,8 +37,8 @@ class FormAddExpense extends Component {
     const { currencies } = this.props;
     const currenciesArray = Object.values(JSON.parse(currencies));
     const currenciesWithoutUSDT = this.deleteUDST(currenciesArray);
-    return currenciesWithoutUSDT.map(({ code }) => (
-      <option key={ code } value={ code }>{ code }</option>));
+    return currenciesWithoutUSDT.map(({ code }, index) => (
+      <option key={ `${code} ${index}` } value={ code }>{ code }</option>));
   }
 
   async mountExpense() {

@@ -1,4 +1,4 @@
-import { ADD, SAVE } from './index';
+import { ADD, SAVE, REMOVE } from './index';
 
 export const saveCurrencies = (currencies) => ({
   type: SAVE,
@@ -17,5 +17,12 @@ export const addExpense = (expense) => ({
   type: ADD,
   payload: {
     expense,
+  },
+});
+
+export const removeExpense = (id) => ({
+  type: REMOVE,
+  payload: {
+    id,
   },
 });

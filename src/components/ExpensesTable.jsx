@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { removeExpense } from '../actions/walletActions';
 
 class ExpensesTable extends Component {
   constructor() {
@@ -10,7 +11,7 @@ class ExpensesTable extends Component {
   }
 
   renderExpenses() {
-    const { expenses } = this.props;
+    const { expenses, remExpense } = this.props;
     const allExpenses = expenses.map(({ id,
       value,
       description,
@@ -35,6 +36,15 @@ class ExpensesTable extends Component {
             { Math.round((parseFloat(value) * parseFloat(findCurrency.ask)) * 100) / 100 }
           </td>
           <td key="Real">Real</td>
+          <td>
+            <button
+              type="button"
+              data-testid="delete-btn"
+              onClick={ () => remExpense(id) }
+            >
+              Excluir
+            </button>
+          </td>
         </tr>
       );
     });
@@ -70,8 +80,13 @@ const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  remExpense: (id) => dispatch(removeExpense(id)),
+});
+
 ExpensesTable.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
+  remExpense: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, null)(ExpensesTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ExpensesTable);
