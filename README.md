@@ -1,4 +1,4 @@
-# Boas vindas ao repositório do projeto _TrybeWallet_!
+# Boas-vindas ao repositório do projeto _TrybeWallet_!
 
 Aqui você vai encontrar todos os detalhes de como usufruir do que foi desenvolvido.
 
@@ -77,7 +77,7 @@ Tive que demonstrar conhecimento suficiente para:
   * Inicialize o projeto:
     * `npm start` (uma nova página já com o projeto deve abrir no seu navegador)
   * Verifique que os testes estão passando:
-    * `npm test` (os testes devem rodar e falhar)
+    * `npm test` (os testes devem rodar)
 
 OU
 
