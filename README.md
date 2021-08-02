@@ -7,7 +7,7 @@ Neste projeto o objetivo era projetar uma carteira de controle de gastos juntame
   - Visualizar uma tabelas com seus gastos;
   - Visualizar o total de gastos convertidos para uma moeda de escolha;
 
-Ou seja, desenvolver uma aplicação em React que use Redux como ferramenta de manipulação de estado. Através dessa aplicação, é possível realizar as operações básicas de criação e manipulação de um estado de Redux.
+Ou seja, trata-se uma aplicação em React que usa o Redux como ferramenta de manipulação de estado. Através dessa aplicação, é possível realizar as operações básicas de criação e manipulação de um estado de Redux.
 
 ---
 
